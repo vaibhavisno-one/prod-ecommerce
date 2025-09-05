@@ -14,7 +14,11 @@
   },
   "repository": {
     "type": "git",
+<<<<<<< HEAD
     "url": "git+https://github.com/vaibhavisno-one/prod-ecommerce.git"
+=======
+    "url": "https://github.com/vaibhavisno-one/prod-ecommerce.git"
+>>>>>>> 47111f0915d191e32815759a5176afb5ed4f635d
   },
   "keywords": [
     "node",
