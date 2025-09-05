@@ -13,46 +13,51 @@ const { ROLES, CART_ITEM_STATUS } = require('../../constants');
 
 router.post('/add', auth, async (req, res) => {
   try {
-    const cart = req.body.cartId;
-    const total = req.body.total;
-    const user = req.user._id;
+    const { cartId, total } = req.body;
+    const userId = req.user._id;
 
+    if (!cartId) return res.status(400).json({ error: 'cartId is required' });
+    if (!total) return res.status(400).json({ error: 'total is required' });
+
+    // Save order
     const order = new Order({
-      cart,
-      user,
+      cart: cartId,
+      user: userId,
       total
     });
 
     const orderDoc = await order.save();
 
-    const cartDoc = await Cart.findById(orderDoc.cart._id).populate({
+    // Populate cart with products and brands
+    const cartDoc = await Cart.findById(cartId).populate({
       path: 'products.product',
-      populate: {
-        path: 'brand'
-      }
+      populate: { path: 'brand' }
     });
+
+    if (!cartDoc) return res.status(404).json({ error: 'Cart not found' });
 
     const newOrder = {
       _id: orderDoc._id,
       created: orderDoc.created,
-      user: orderDoc.user,
+      user: userId,
       total: orderDoc.total,
       products: cartDoc.products
     };
 
-    await mailgun.sendEmail(order.user.email, 'order-confirmation', newOrder);
 
     res.status(200).json({
       success: true,
-      message: `Your order has been placed successfully!`,
-      order: { _id: orderDoc._id }
+      message: 'Your order has been placed successfully!',
+      order: newOrder
     });
   } catch (error) {
+    console.error('Add Order Error:', error);
     res.status(400).json({
       error: 'Your request could not be processed. Please try again.'
     });
   }
 });
+
 
 // search orders api
 router.get('/search', auth, async (req, res) => {

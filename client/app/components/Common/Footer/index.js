@@ -57,26 +57,24 @@ const Footer = () => {
               <ul>{footerLinks}</ul>
             </div>
           </div>
-          <div className='footer-block'>
-            <div className='block-title'>
-              <h3 className='text-uppercase'>Newsletter</h3>
-              <Newsletter />
-            </div>
-          </div>
+
         </div>
         <div className='footer-copyright'>
-          <span>© {new Date().getFullYear()} MERN Store</span>
+          <span>© {new Date().getFullYear()} bastard_wears</span>
         </div>
         <ul className='footer-social-item'>
           <li>
-            <a href='/#facebook' rel='noreferrer noopener' target='_blank'>
-              <span className='facebook-icon' />
-            </a>
+
           </li>
           <li>
-            <a href='/#instagram' rel='noreferrer noopener' target='_blank'>
-              <span className='instagram-icon' />
+            <a
+              href="https://www.instagram.com/bastard_wears/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span className="instagram-icon" />
             </a>
+
           </li>
           <li>
             <a href='/#pinterest' rel='noreferrer noopener' target='_blank'>

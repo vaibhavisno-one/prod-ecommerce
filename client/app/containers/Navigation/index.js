@@ -27,6 +27,7 @@ import {
 } from 'reactstrap';
 
 import actions from '../../actions';
+import BastardLogo from '../../../public/images/Bastard.png';
 
 import Button from '../../components/Common/Button';
 import CartIcon from '../../components/Common/CartIcon';
@@ -81,11 +82,10 @@ class Navigation extends React.PureComponent {
         <div className='d-flex'>
           <img
             className='item-image'
-            src={`${
-              suggestion.imageUrl
-                ? suggestion.imageUrl
-                : '/images/placeholder-image.png'
-            }`}
+            src={`${suggestion.imageUrl
+              ? suggestion.imageUrl
+              : '/images/placeholder-image.png'
+              }`}
           />
           <div>
             <Container>
@@ -144,17 +144,14 @@ class Navigation extends React.PureComponent {
                 <i className='fa fa-truck' />
                 <span>Free Shipping</span>
               </Col>
-              <Col md='4' className='text-center d-none d-md-block'>
-                <i className='fa fa-credit-card' />
-                <span>Payment Methods</span>
-              </Col>
+              
               <Col md='4' className='text-center d-none d-md-block'>
                 <i className='fa fa-phone' />
-                <span>Call us 951-999-9999</span>
+                <span>Call us 7007722955</span>
               </Col>
               <Col xs='12' className='text-center d-block d-md-none'>
                 <i className='fa fa-phone' />
-                <span> Need advice? Call us 951-999-9999</span>
+                <span> Need advice? Call us 7007722955</span>
               </Col>
             </Row>
           </Container>
@@ -180,8 +177,14 @@ class Navigation extends React.PureComponent {
                   />
                 )}
                 <Link to='/'>
-                  <h1 className='logo'>MERN Store</h1>
+                  <img
+                    src='/images/Bastard.png'
+                    alt='Bastard Logo'
+                    height={74}
+                    className='logo h-12 w-auto object-contain'
+                  />
                 </Link>
+
               </div>
             </Col>
             <Col
@@ -226,7 +229,7 @@ class Navigation extends React.PureComponent {
               sm={{ size: 12, order: 2 }}
               md={{ size: 9, order: 1 }}
               lg={{ size: 4, order: 3 }}
-              // className='px-0'
+            // className='px-0'
             >
               <Navbar color='light' light expand='md' className='mt-1 mt-md-0'>
                 <CartIcon
