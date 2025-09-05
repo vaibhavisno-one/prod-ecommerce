@@ -11,6 +11,8 @@ const auth = require('../../middleware/auth');
 const store = require('../../utils/store');
 const { ROLES, CART_ITEM_STATUS } = require('../../constants');
 
+const { sendEmail } = require('../../utils/email');
+
 router.post('/add', auth, async (req, res) => {
   try {
     const { cartId, total } = req.body;
@@ -19,19 +21,17 @@ router.post('/add', auth, async (req, res) => {
     if (!cartId) return res.status(400).json({ error: 'cartId is required' });
     if (!total) return res.status(400).json({ error: 'total is required' });
 
-    // Save order
     const order = new Order({
       cart: cartId,
       user: userId,
-      total
+      total,
     });
 
     const orderDoc = await order.save();
 
-    // Populate cart with products and brands
     const cartDoc = await Cart.findById(cartId).populate({
       path: 'products.product',
-      populate: { path: 'brand' }
+      populate: { path: 'brand' },
     });
 
     if (!cartDoc) return res.status(404).json({ error: 'Cart not found' });
@@ -41,22 +41,49 @@ router.post('/add', auth, async (req, res) => {
       created: orderDoc.created,
       user: userId,
       total: orderDoc.total,
-      products: cartDoc.products
+      products: cartDoc.products,
     };
 
+    // 📩 Send email to Admin
+    await sendEmail({
+      to: process.env.ADMIN_EMAIL,
+      subject: `🛒 New Order Received - ${newOrder._id}`,
+      text: `A new order has been placed by user ${req.user.email}.`,
+      html: `
+        <h2>New Order Received</h2>
+        <p><b>Order ID:</b> ${newOrder._id}</p>
+        <p><b>User:</b> ${req.user.email}</p>
+        <p><b>Total:</b> ₹${newOrder.total}</p>
+      `,
+    });
+
+    // 📩 Send confirmation email to User
+    await sendEmail({
+      to: req.user.email,
+      subject: `✅ Order Confirmation - ${newOrder._id}`,
+      text: `Your order has been placed successfully!`,
+      html: `
+        <h2>Order Confirmed</h2>
+        <p>Hi ${req.user.name || 'User'},</p>
+        <p>Your order <b>${newOrder._id}</b> has been placed successfully.</p>
+        <p><b>Total:</b> ₹${newOrder.total}</p>
+        <p>We’ll notify you once it's shipped.</p>
+      `,
+    });
 
     res.status(200).json({
       success: true,
       message: 'Your order has been placed successfully!',
-      order: newOrder
+      order: newOrder,
     });
   } catch (error) {
     console.error('Add Order Error:', error);
     res.status(400).json({
-      error: 'Your request could not be processed. Please try again.'
+      error: 'Your request could not be processed. Please try again.',
     });
   }
 });
+
 
 
 // search orders api

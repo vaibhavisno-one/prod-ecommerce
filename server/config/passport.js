@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 const keys = require('./keys');
 const { EMAIL_PROVIDER } = require('../constants');
 
-const { google, facebook } = keys;
+const { google } = keys;
 
 const User = mongoose.model('User');
 const secret = keys.jwt.secret;
@@ -87,54 +87,4 @@ const googleAuth = async () => {
   }
 };
 
-const facebookAuth = async () => {
-  try {
-    passport.use(
-      new FacebookStrategy(
-        {
-          clientID: facebook.clientID,
-          clientSecret: facebook.clientSecret,
-          callbackURL: facebook.callbackURL,
-          profileFields: [
-            'id',
-            'displayName',
-            'name',
-            'emails',
-            'picture.type(large)'
-          ]
-        },
-        (accessToken, refreshToken, profile, done) => {
-          User.findOne({ facebookId: profile.id })
-            .then(user => {
-              if (user) {
-                return done(null, user);
-              }
 
-              const newUser = new User({
-                provider: EMAIL_PROVIDER.Facebook,
-                facebookId: profile.id,
-                email: profile.emails ? profile.emails[0].value : null,
-                firstName: profile.name.givenName,
-                lastName: profile.name.familyName,
-                avatar: profile.photos[0].value,
-                password: null
-              });
-
-              newUser.save((err, user) => {
-                if (err) {
-                  return done(err, false);
-                }
-
-                return done(null, user);
-              });
-            })
-            .catch(err => {
-              return done(err, false);
-            });
-        }
-      )
-    );
-  } catch (error) {
-    console.log('Missing facebook keys');
-  }
-};

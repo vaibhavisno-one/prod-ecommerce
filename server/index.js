@@ -23,6 +23,37 @@ app.use(
 app.use(cors());
 
 setupDB();
+
+const bcrypt = require("bcryptjs");
+const User = require("./models/user"); // adjust path if needed
+const { ROLES } = require("./constants"); // adjust path if needed
+
+(async () => {
+  try {
+    const email = process.env.ADMIN_EMAIL;   // 👈 using the env var
+    const password = process.env.ADMIN_PASSWORD;
+
+    const existing = await User.findOne({ email });
+    if (!existing) {
+      const hash = await bcrypt.hash(password, 10);
+      const admin = new User({
+        email,
+        password: hash,
+        firstName: "Admin",
+        lastName: "User",
+        role: ROLES.Admin, 
+      });
+      await admin.save();
+      console.log("✅ Admin user created:", email, "/", password);
+    } else {
+      console.log("⚠️ Admin already exists:", email);
+    }
+  } catch (err) {
+    console.error("Error creating admin:", err);
+  }
+})();
+
+
 require('./config/passport')(app);
 app.use(routes);
 
