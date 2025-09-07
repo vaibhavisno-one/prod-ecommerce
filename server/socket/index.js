@@ -49,11 +49,12 @@ const authHandler = async (socket, next) => {
 
 const socket = server => {
   const io = socketio(server, {
-    cors: {
-      origin: '*',
-      methods: ['GET', 'POST']
-    }
-  });
+  cors: {
+    origin: 'http://localhost:8080',
+    methods: ['GET', 'POST'],
+    credentials: true
+  }
+});
 
   io.use(authHandler);
 

@@ -23,8 +23,7 @@ router.use('/user', userRoutes);
 // address routes
 router.use('/address', addressRoutes);
 
-// newsletter routes
-// router.use('/newsletter', newsletterRoutes);
+
 
 // product routes
 router.use('/product', productRoutes);
