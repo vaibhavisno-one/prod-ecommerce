@@ -3,7 +3,6 @@ file .prettierignore
 folder client
   file .babelrc
   file .env
-  file .env.example
   folder app
     file actions.js
     file app.js
@@ -391,96 +390,6 @@ folder client
       file store.js
       file token.js
       file validation.js
-  folder dist
-    folder css
-      file main.97da57c2f466491f872e.css
-      file vendors.97da57c2f466491f872e.css
-    folder fonts
-      file fontawesome-webfont.674f50d287a8c48dc19ba404d20fe713.eot
-      file fontawesome-webfont.912ec66d7572ff821749319396470bde.svg
-      file fontawesome-webfont.af7ae505a9eed503f8b8e6982036873e.woff2
-      file fontawesome-webfont.b06871f281fee6b241d60582ae9369b9.ttf
-      file fontawesome-webfont.fee66e712a8a08eef5805a46892932ad.woff
-      file poppins-all-300-normal.96672ca837f683bf9e6eed61e86c6012.woff
-      file poppins-all-400-normal.bbae93786a029de7b9458f5ca63e01fd.woff
-      file poppins-all-500-normal.3bb9ab2862ae072e657fb2fb2b6a3279.woff
-      file poppins-all-600-normal.b6eb345b4e0cb02a9d332aa5145c3c2b.woff
-      file poppins-all-700-normal.4428e6c8c52a6f314021260c812f9c0a.woff
-      file poppins-devanagari-300-normal.dc820d9f0f62811268590ff631f36be9.woff2
-      file poppins-devanagari-400-normal.790d0c8dbcd491d29d58f1369c199d40.woff2
-      file poppins-devanagari-500-normal.79e6e81d255edac7e8627c7e16baccf5.woff2
-      file poppins-devanagari-600-normal.e9fd398a43c9e51f9ee14e757eaf95d9.woff2
-      file poppins-devanagari-700-normal.7def222d1a45cb1cb7d8c3ae675dbdcc.woff2
-      file poppins-latin-300-normal.8d91ec1ca2d8b56640a47117e313a3e9.woff2
-      file poppins-latin-400-normal.9212f6f9860f9fc6c69b02fedf6db8c3.woff2
-      file poppins-latin-500-normal.a09f2fccfee35b7247b08a1a266f0328.woff2
-      file poppins-latin-600-normal.72993dddf88a63e8f226656f7de88e57.woff2
-      file poppins-latin-700-normal.25b0e113ca7cce3770d542736db26368.woff2
-      file poppins-latin-ext-300-normal.6731e1ba3788bda094c89ee8fc131aef.woff2
-      file poppins-latin-ext-400-normal.0ed299a4bb5262e17e2145783b2c18f1.woff2
-      file poppins-latin-ext-500-normal.a6ff41d10fa89e7f8fec937c243d7428.woff2
-      file poppins-latin-ext-600-normal.72b3ae37567ee5efdf2254b657c36ba9.woff2
-      file poppins-latin-ext-700-normal.96b6d54684daa94742f7bfd72a981213.woff2
-      file revicons.04eb8fc57f27498e5ae37523e3bfb2c7.woff
-      file revicons.17629a5dfe0d3c3946cf401e1895f091.ttf
-      file revicons.2feb69ccb596730c72920c6ba3e37ef8.eot
-      file Simple-Line-Icons.0cb0b9c589c0624c9c78dd3d83e946f6.woff2
-      file Simple-Line-Icons.2fe2efe63441d830b1acd106c1fe8734.svg
-      file Simple-Line-Icons.78f07e2c2a535c26ef21d95e41bd7175.woff
-      file Simple-Line-Icons.d2285965fe34b05465047401b8595dd0.ttf
-      file Simple-Line-Icons.f33df365d6d0255b586f2920355e94d7.eot
-    folder images
-      file arrow-right.svg
-      file bag.svg
-      folder banners
-        file agreement.svg
-        file banner-1.jpg
-        file banner-2.jpg
-        file banner-3.jpg
-        file banner-4.jpg
-        file banner-5.jpg
-        file banner-6.jpg
-        file banner-7.jpg
-      file bars.png
-      file Bastard.dffe1b5b573ae1d40ed9493fbc04a723.png
-      file Bastard.png
-      file chevron-down.svg
-      file close.svg
-      file favicon.ico
-      file fontawesome-webfont.eea9b17334464331e9426b9323861e5b.svg
-      file icon_120x120.59867919260cbe59df1339798a808211.png
-      file icon_128x128.b09859a3b2050b40c9b7b8112aefc6d1.png
-      file icon_144x144.951c2b370cab63d59f79e290bbb2392f.png
-      file icon_152x152.5b58d1036ca1e8c10b5b5e7696632ff4.png
-      file icon_167x167.484a36e71244a4f47d9bac8b79fe92ad.png
-      file icon_180x180.95263fe477f69519c6d33c6cfe5b3383.png
-      file icon_192x192.0488785027fde1c1e8aee1b70c7116a0.png
-      file icon_384x384.388e4b8e784348af33fb2d52a14562ba.png
-      file icon_512x512.ec4b753fd43e0b298f30d2840275bf09.png
-      file icon_72x72.853f0d8e4d614ad229e484f4f681d338.png
-      file icon_96x96.24c2581014352ae4d44ad31a12812f4a.png
-      file placeholder-image.png
-      folder products
-        file product-1.jpg
-        file product-2.jpg
-        file product-3.jpg
-        file product-4.jpg
-        file product-5.jpg
-      file pwa.png
-      file Simple-Line-Icons.771881ef23bfaa463b7bbcd3f289f4fa.svg
-      folder social-icons
-        file facebook.svg
-        file instagram.svg
-        file pinterest.svg
-        file twitter.svg
-      file test.jpg
-    file index.html
-    folder js
-      file main.97da57c2f466491f872e.js
-      file runtime.97da57c2f466491f872e.js
-      file vendors.97da57c2f466491f872e.js
-    file manifest.d4aae4722ba690c68103e0b0046a3f24.json
-  file nginx.conf
   file package-lock.json
   file package.json
   folder public
@@ -573,6 +482,7 @@ folder server
     file support.js
   folder utils
     file auth.js
+    file cloudinary.js
     file db.js
     file email.js
     file queries.js
@@ -580,3 +490,4 @@ folder server
     file storage.js
     file store.js
     file utils.js
+file structure.txt

@@ -20,7 +20,22 @@ app.use(
     frameguard: true
   })
 );
-app.use(cors());
+
+// Frontend Connection
+const allowedOrigins = ['http://localhost:5000', 'http://localhost:8080', 'https://bastard-delta.vercel.app/'];
+
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
+
+
 
 setupDB();
 
