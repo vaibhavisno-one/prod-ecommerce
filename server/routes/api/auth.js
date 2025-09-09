@@ -5,7 +5,13 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const passport = require('passport');
 
+
 const auth = require('../../middleware/auth');
+
+// Simple GET route for /api/auth to verify API visibility
+router.get('/', (req, res) => {
+  res.json({ message: 'Auth API is working.' });
+});
 
 // Bring in Models & Helpers
 const User = require('../../models/user');
@@ -104,7 +110,7 @@ router.post('/register', async (req, res) => {
         .json({ error: 'That email address is already in use.' });
     }
 
-  
+
 
     const user = new User({
       email,
@@ -119,7 +125,7 @@ router.post('/register', async (req, res) => {
     user.password = hash;
     const registeredUser = await user.save();
 
-    
+
 
     const token = jwt.sign(payload, secret, { expiresIn: tokenLife });
 
