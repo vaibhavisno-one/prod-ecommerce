@@ -44,9 +44,9 @@ class Homepage extends React.PureComponent {
           <h2 className="text-center mb-4 fw-bold">Shop by Category</h2>
           <Row className="g-4 justify-content-center">
             {[
-              { name: "Men", img: "/images/test.jpg" },
-              { name: "Unisex", img: "/images/test.jpg" },
-              { name: "Women", img: "/images/test.jpg"},
+              { name: "Men", img: "/images/men.jpg" },
+              { name: "Unisex", img: "/images/unisex.jpg" },
+              { name: "Women", img: "/images/women.jpg"},
             ].map((cat, index) => (
               <Col key={index} xs="6" md="4" lg="3" className="d-flex justify-content-center">
                 <a
@@ -87,7 +87,7 @@ class Homepage extends React.PureComponent {
           />
         </section>
 
-        {/* Featured Products */}
+        {/* Featured Products
         <section className="featured mb-5">
           <h2 className="text-center mb-4 fw-bold">Trending Now</h2>
           <Row className="g-3">
@@ -105,7 +105,7 @@ class Homepage extends React.PureComponent {
               </Col>
             ))}
           </Row>
-        </section>
+        </section> */}
       </div>
     );
   }
