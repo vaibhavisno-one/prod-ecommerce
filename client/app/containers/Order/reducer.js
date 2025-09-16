@@ -1,6 +1,6 @@
 /*
  *
- * Order reducer
+ * Order reducer with address support
  *
  */
 
@@ -23,7 +23,10 @@ const initialState = {
     products: [],
     totalTax: 0,
     total: 0,
-    status: ''
+    status: '',
+    address: null, // Added address field
+    user: null,    // Added user field for additional context
+    created: null  // Added created date field
   },
   isLoading: false,
   advancedFilters: {
@@ -48,7 +51,11 @@ const orderReducer = (state = initialState, action) => {
     case FETCH_ORDER:
       return {
         ...state,
-        order: action.payload
+        order: {
+          ...action.payload,
+          // Ensure address is properly structured
+          address: action.payload.address || null
+        }
       };
     case SET_ADVANCED_FILTERS:
       return {

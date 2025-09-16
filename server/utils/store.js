@@ -110,16 +110,20 @@ exports.caculateItemsSalesTax = items => {
 };
 
 exports.formatOrders = orders => {
-  const newOrders = orders.map(order => {
+  const newOrders = orders.map(o => {
     return {
-      _id: order._id,
-      total: parseFloat(Number(order.total.toFixed(2))),
-      created: order.created,
-      products: order?.cart?.products
+      _id: o._id,
+      total: parseFloat(Number(o.total.toFixed(2))),
+      created: o.created,
+      products: o.cart?.products || [],
+      address: o.address || null // Include address in formatted orders
     };
   });
 
-  return newOrders.map(order => {
-    return order?.products ? this.caculateTaxAmount(order) : order;
-  });
+  let formattedOrders = newOrders.map(o =>
+    o?.products ? this.caculateTaxAmount(o) : o
+  );
+
+  return formattedOrders.sort((a, b) => b.created - a.created);
 };
+

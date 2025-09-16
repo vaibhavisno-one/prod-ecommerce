@@ -1,12 +1,12 @@
 /*
  *
- * Order actions
+ * Order actions with address validation
  *
  */
 
 import { push } from 'connected-react-router';
 import axios from 'axios';
-import { success } from 'react-notification-system-redux';
+import { success, warning } from 'react-notification-system-redux';
 
 import {
   FETCH_ORDERS,
@@ -20,6 +20,7 @@ import {
 
 import { clearCart, getCartId } from '../Cart/actions';
 import { toggleCart } from '../Navigation/actions';
+import { fetchAddresses } from '../Address/actions';
 import handleError from '../../utils/error';
 import { API_URL } from '../../constants';
 
@@ -195,13 +196,78 @@ export const updateOrderItemStatus = (itemId, status) => {
   };
 };
 
+// Helper function to validate if user has addresses
+export const validateUserAddress = () => {
+  return async (dispatch, getState) => {
+    try {
+      // Fetch user addresses if not already available
+      const addresses = getState().address?.addresses || [];
+      
+      if (addresses.length === 0) {
+        // Fetch addresses to make sure we have the latest data
+        await dispatch(fetchAddresses());
+        const updatedAddresses = getState().address?.addresses || [];
+        
+        if (updatedAddresses.length === 0) {
+          // No addresses found
+          const warningOptions = {
+            title: 'Address Required',
+            message: 'Please add a delivery address before placing your order.',
+            position: 'tr',
+            autoDismiss: 3
+          };
+          dispatch(warning(warningOptions));
+          dispatch(push('/dashboard/address/add'));
+          return false;
+        }
+      }
+      
+      // Check if user has a default address or at least one address
+      const hasDefaultAddress = addresses.some(addr => addr.isDefault);
+      
+      if (!hasDefaultAddress && addresses.length > 0) {
+        // User has addresses but no default one
+        const warningOptions = {
+          title: 'Default Address Required',
+          message: 'Please select a default delivery address.',
+          position: 'tr',
+          autoDismiss: 3
+        };
+        dispatch(warning(warningOptions));
+        dispatch(push('/dashboard/address'));
+        return false;
+      }
+      
+      return true;
+    } catch (error) {
+      handleError(error, dispatch);
+      return false;
+    }
+  };
+};
+
 export const addOrder = () => {
   return async (dispatch, getState) => {
     try {
       const cartId = localStorage.getItem('cart_id');
       const total = getState().cart.cartTotal;
+      const addresses = getState().address?.addresses || [];
+      
+      // Get the default address or first available address
+      const defaultAddress = addresses.find(addr => addr.isDefault) || addresses[0];
 
-      if (cartId) {
+      if (cartId && defaultAddress) {
+        const response = await axios.post(`${API_URL}/order/add`, {
+          cartId,
+          total,
+          addressId: defaultAddress._id, // Send address ID to backend
+          address: defaultAddress        // Send full address object for immediate use
+        });
+
+        dispatch(push(`/order/success/${response.data.order._id}`));
+        dispatch(clearCart());
+      } else if (cartId) {
+        // Fallback if no address found (shouldn't happen due to validation)
         const response = await axios.post(`${API_URL}/order/add`, {
           cartId,
           total
@@ -216,19 +282,31 @@ export const addOrder = () => {
   };
 };
 
+// Updated placeOrder with address validation
 export const placeOrder = () => {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     const token = localStorage.getItem('token');
-
     const cartItems = getState().cart.cartItems;
 
     if (token && cartItems.length > 0) {
-      Promise.all([dispatch(getCartId())]).then(() => {
-        dispatch(addOrder());
-      });
+      try {
+        // First validate if user has address
+        const hasValidAddress = await dispatch(validateUserAddress());
+        
+        if (hasValidAddress) {
+          // Proceed with order placement
+          await Promise.all([dispatch(getCartId())]);
+          dispatch(addOrder());
+          dispatch(toggleCart());
+        }
+        // If address validation fails, the user will be redirected to address page
+        // and cart will remain open
+      } catch (error) {
+        handleError(error, dispatch);
+      }
+    } else {
+      dispatch(toggleCart());
     }
-
-    dispatch(toggleCart());
   };
 };
 

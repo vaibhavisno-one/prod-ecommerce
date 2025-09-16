@@ -79,7 +79,7 @@ class RangeSlider extends React.Component {
             className='slider'
             pushable={10}
             allowCross={allowCross}
-            min={1}
+            min={500}
             max={max}
             step={step}
             defaultValue={defaultValue}

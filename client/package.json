@@ -12,6 +12,7 @@
     "autosuggest-highlight": "^3.1.1",
     "axios": "^0.21.1",
     "bootstrap": "^4.3.1",
+    "cashfree-dropjs": "^1.1.5",
     "connected-react-router": "^6.4.0",
     "dompurify": "^2.3.8",
     "dotenv": "^8.0.0",

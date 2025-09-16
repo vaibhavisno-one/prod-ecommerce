@@ -52,4 +52,8 @@ router.use('/review', reviewRoutes);
 // Wishlist routes
 router.use('/wishlist', wishlistRoutes);
 
+
+//payment
+// router.use("/payment", require("./payment"));
+
 module.exports = router;

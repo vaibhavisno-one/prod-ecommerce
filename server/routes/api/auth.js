@@ -151,6 +151,7 @@ router.post('/register', async (req, res) => {
 router.post('/forgot', async (req, res) => {
   try {
     const { email } = req.body;
+    console.log('📧 Forgot password request for:', email);
 
     if (!email) {
       return res
@@ -159,28 +160,58 @@ router.post('/forgot', async (req, res) => {
     }
 
     const existingUser = await User.findOne({ email });
+    console.log('👤 User found:', !!existingUser);
 
     if (!existingUser) {
       return res
         .status(400)
-        .send({ error: 'No user found for this email address.' });
+        .json({ error: 'No user found for this email address.' });
     }
 
-    const buffer = crypto.randomBytes(48);
-    const resetToken = buffer.toString('hex');
+    // Generate random 8-digit password
+    const randomPassword = Math.floor(10000000 + Math.random() * 90000000).toString();
+    console.log('🔑 Generated password:', randomPassword);
 
-    existingUser.resetPasswordToken = resetToken;
-    existingUser.resetPasswordExpires = Date.now() + 3600000;
+    // Hash the new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(randomPassword, salt);
 
-    existingUser.save();
+    // Update user's password directly
+    existingUser.password = hashedPassword;
+    existingUser.resetPasswordToken = undefined; // Clear any existing tokens
+    existingUser.resetPasswordExpires = undefined;
 
+    await existingUser.save();
+    // console.log('💾 New password saved for user');
 
+    // 📧 SEND EMAIL with new password
+    const { sendEmail } = require('../../utils/email');
+
+    const emailSubject = 'Your New Password';
+    const emailText = `You requested a password reset for your account.
+
+Your new password is: ${randomPassword}
+
+Please use this password to log in to your account. We recommend changing this password after logging in for security purposes.
+
+If you did not request this password reset, please contact us immediately.`;
+
+    // console.log('📨 Attempting to send email with new password...');
+
+    await sendEmail({
+      to: existingUser.email,
+      subject: emailSubject,
+      text: emailText
+    });
+
+    // console.log('✅ Email sent with new password');
 
     res.status(200).json({
       success: true,
-      message: 'Please check your email for the link to reset your password.'
+      message: 'A new password has been sent to your email address.'
     });
   } catch (error) {
+    console.error('❌ Forgot password error:', error);
     res.status(400).json({
       error: 'Your request could not be processed. Please try again.'
     });

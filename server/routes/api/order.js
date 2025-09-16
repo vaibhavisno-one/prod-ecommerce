@@ -6,6 +6,7 @@ const Mongoose = require('mongoose');
 const Order = require('../../models/order');
 const Cart = require('../../models/cart');
 const Product = require('../../models/product');
+const Address = require('../../models/address'); // Add Address model
 const auth = require('../../middleware/auth');
 
 const store = require('../../utils/store');
@@ -15,16 +16,24 @@ const { sendEmail } = require('../../utils/email');
 
 router.post('/add', auth, async (req, res) => {
   try {
-    const { cartId, total } = req.body;
+    const { cartId, total, addressId } = req.body; // Add addressId
     const userId = req.user._id;
 
     if (!cartId) return res.status(400).json({ error: 'cartId is required' });
     if (!total) return res.status(400).json({ error: 'total is required' });
+    if (!addressId) return res.status(400).json({ error: 'addressId is required' });
+
+    // Verify address belongs to user
+    const address = await Address.findOne({ _id: addressId, user: userId });
+    if (!address) {
+      return res.status(400).json({ error: 'Invalid address selected' });
+    }
 
     const order = new Order({
       cart: cartId,
       user: userId,
       total,
+      address: addressId, // Add address reference
     });
 
     const orderDoc = await order.save();
@@ -42,6 +51,7 @@ router.post('/add', auth, async (req, res) => {
       user: userId,
       total: orderDoc.total,
       products: cartDoc.products,
+      address: address, // Include address in response
     };
 
     // 📩 Send email to Admin
@@ -54,6 +64,7 @@ router.post('/add', auth, async (req, res) => {
         <p><b>Order ID:</b> ${newOrder._id}</p>
         <p><b>User:</b> ${req.user.email}</p>
         <p><b>Total:</b> ₹${newOrder.total}</p>
+        <p><b>Delivery Address:</b> ${address.address}, ${address.city}, ${address.state} ${address.zipCode}</p>
       `,
     });
 
@@ -67,7 +78,8 @@ router.post('/add', auth, async (req, res) => {
         <p>Hi ${req.user.name || 'User'},</p>
         <p>Your order <b>${newOrder._id}</b> has been placed successfully.</p>
         <p><b>Total:</b> ₹${newOrder.total}</p>
-        <p>We’ll notify you once it's shipped.</p>
+        <p><b>Delivery Address:</b> ${address.address}, ${address.city}, ${address.state} ${address.zipCode}</p>
+        <p>We'll notify you once it's shipped.</p>
       `,
     });
 
@@ -83,8 +95,6 @@ router.post('/add', auth, async (req, res) => {
     });
   }
 });
-
-
 
 // search orders api
 router.get('/search', auth, async (req, res) => {
@@ -102,7 +112,9 @@ router.get('/search', auth, async (req, res) => {
     if (req.user.role === ROLES.Admin) {
       ordersDoc = await Order.find({
         _id: Mongoose.Types.ObjectId(search)
-      }).populate({
+      })
+      .populate('address') // Add address population
+      .populate({
         path: 'cart',
         populate: {
           path: 'products.product',
@@ -116,7 +128,9 @@ router.get('/search', auth, async (req, res) => {
       ordersDoc = await Order.find({
         _id: Mongoose.Types.ObjectId(search),
         user
-      }).populate({
+      })
+      .populate('address') // Add address population
+      .populate({
         path: 'cart',
         populate: {
           path: 'products.product',
@@ -135,7 +149,8 @@ router.get('/search', auth, async (req, res) => {
           _id: o._id,
           total: parseFloat(Number(o.total.toFixed(2))),
           created: o.created,
-          products: o.cart?.products
+          products: o.cart?.products,
+          address: o.address // Include address
         };
       });
 
@@ -162,6 +177,7 @@ router.get('/', auth, async (req, res) => {
     const { page = 1, limit = 10 } = req.query;
     const ordersDoc = await Order.find()
       .sort('-created')
+      .populate('address') // Add address population
       .populate({
         path: 'cart',
         populate: {
@@ -200,6 +216,7 @@ router.get('/me', auth, async (req, res) => {
 
     const ordersDoc = await Order.find(query)
       .sort('-created')
+      .populate('address') // Add address population
       .populate({
         path: 'cart',
         populate: {
@@ -237,26 +254,30 @@ router.get('/:orderId', auth, async (req, res) => {
     let orderDoc = null;
 
     if (req.user.role === ROLES.Admin) {
-      orderDoc = await Order.findOne({ _id: orderId }).populate({
-        path: 'cart',
-        populate: {
-          path: 'products.product',
+      orderDoc = await Order.findOne({ _id: orderId })
+        .populate('address') // Add address population
+        .populate({
+          path: 'cart',
           populate: {
-            path: 'brand'
+            path: 'products.product',
+            populate: {
+              path: 'brand'
+            }
           }
-        }
-      });
+        });
     } else {
       const user = req.user._id;
-      orderDoc = await Order.findOne({ _id: orderId, user }).populate({
-        path: 'cart',
-        populate: {
-          path: 'products.product',
+      orderDoc = await Order.findOne({ _id: orderId, user })
+        .populate('address') // Add address population
+        .populate({
+          path: 'cart',
           populate: {
-            path: 'brand'
+            path: 'products.product',
+            populate: {
+              path: 'brand'
+            }
           }
-        }
-      });
+        });
     }
 
     if (!orderDoc || !orderDoc.cart) {
@@ -271,7 +292,8 @@ router.get('/:orderId', auth, async (req, res) => {
       created: orderDoc.created,
       totalTax: 0,
       products: orderDoc?.cart?.products,
-      cartId: orderDoc.cart._id
+      cartId: orderDoc.cart._id,
+      address: orderDoc.address // Include address
     };
 
     order = store.caculateTaxAmount(order);
