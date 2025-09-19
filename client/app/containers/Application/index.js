@@ -21,6 +21,8 @@ import Dashboard from '../Dashboard';
 import Support from '../Support';
 import Navigation from '../Navigation';
 import Authentication from '../Authentication';
+import Payment from '../Payment';
+
 import Notification from '../Notification';
 import ForgotPassword from '../ForgotPassword';
 import ResetPassword from '../ResetPassword';
@@ -91,6 +93,8 @@ class Application extends React.PureComponent {
                 <Route path='/order/:id' component={OrderPage} />
                 <Route path='/login' component={Login} />
                 <Route path='/register' component={Signup} />
+                <Route path="/payment" component={Payment} />
+
                 <Route
                   path='/merchant-signup/:token'
                   component={MerchantSignup}

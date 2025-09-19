@@ -26,6 +26,7 @@ class Cart extends React.PureComponent {
       handleCheckout,
       handleRemoveFromCart,
       placeOrder,
+      placeOrderWithPayment,  // ADD THIS LINE
       authenticated
     } = this.props;
 
@@ -63,6 +64,7 @@ class Cart extends React.PureComponent {
               handleShopping={handleShopping}
               handleCheckout={handleCheckout}
               placeOrder={placeOrder}
+              placeOrderWithPayment={placeOrderWithPayment}  // ADD THIS LINE
               authenticated={authenticated}
             />
           </div>

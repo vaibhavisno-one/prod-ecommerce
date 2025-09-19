@@ -9,7 +9,7 @@ import React from 'react';
 import Button from '../../Common/Button';
 
 const Checkout = props => {
-  const { authenticated, handleShopping, handleCheckout, placeOrder } = props;
+  const { authenticated, handleShopping, handleCheckout, placeOrder, placeOrderWithPayment } = props;
 
   return (
     <div className='easy-checkout'>
@@ -22,8 +22,8 @@ const Checkout = props => {
         {authenticated ? (
           <Button
             variant='primary'
-            text='Place Order'
-            onClick={() => placeOrder()}
+            text='Place Order & Pay'
+            onClick={() => placeOrderWithPayment()} // Make sure this is placeOrderWithPayment, not placeOrder
           />
         ) : (
           <Button

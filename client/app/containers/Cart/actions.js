@@ -216,3 +216,54 @@ const calculatePurchaseQuantity = inventory => {
     return 50;
   }
 };
+
+// FINAL VERSION - redirects to payment instead of order success
+export const placeOrderWithPayment = () => {
+  return async (dispatch, getState) => {
+    try {
+      const { cart, address } = getState();
+      
+      if (!cart.cartId) {
+        await dispatch(getCartId());
+      }
+      
+      const selectedAddress = address.address;
+      
+      if (!selectedAddress || !selectedAddress._id) {
+        const errorOptions = {
+          title: 'Address Required',
+          message: 'Please select a delivery address before placing the order',
+          position: 'tr',
+          autoDismiss: 3
+        };
+        dispatch(success(errorOptions));
+        return;
+      }
+      
+      const orderData = {
+        cartId: cart.cartId,
+        total: cart.cartTotal,
+        addressId: selectedAddress._id
+      };
+      
+      const response = await axios.post(`${API_URL}/order/add`, orderData);
+      
+      if (response.data.success) {
+        const order = response.data.order;
+        
+        // Clear cart
+        dispatch(clearCart());
+        dispatch(toggleCart());
+        
+        // Redirect to payment page instead of order success
+        dispatch(push({
+          pathname: '/payment',
+          state: { order }
+        }));
+      }
+    } catch (error) {
+      console.error('Order creation failed:', error);
+      handleError(error, dispatch);
+    }
+  };
+};

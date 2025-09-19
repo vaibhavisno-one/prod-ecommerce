@@ -1,4 +1,6 @@
 /* start dropdown confirm styles */
+// ADD this import to your existing components file
+@import 'payment';
 .dropdown-confirm {
   .dropdown-action {
     position: relative;

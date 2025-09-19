@@ -27,7 +27,15 @@ exports.REVIEW_STATUS = {
 exports.EMAIL_PROVIDER = {
   Email: 'Email',
   Google: 'Google',
-  
+};
+
+// ADD THESE NEW PAYMENT CONSTANTS
+exports.PAYMENT_STATUS = {
+  PENDING: 'Pending',
+  PROCESSING: 'Processing',
+  COMPLETED: 'Completed',
+  FAILED: 'Failed',
+  CANCELLED: 'Cancelled'
 };
 
 exports.JWT_COOKIE = 'x-jwt-cookie';

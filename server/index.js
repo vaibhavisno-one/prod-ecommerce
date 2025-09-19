@@ -22,7 +22,7 @@ app.use(
 );
 
 // Frontend Connection
-const allowedOrigins = ['http://localhost:5000', 'http://localhost:8080', 'https://bastard-delta.vercel.app'];
+const allowedOrigins = ['http://localhost:5000', 'http://localhost:8000', 'https://bastard-delta.vercel.app'];
 
 app.use(cors({
   origin: function(origin, callback) {
