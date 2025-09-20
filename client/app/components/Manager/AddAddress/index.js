@@ -92,7 +92,7 @@ const AddAddress = props => {
           <Col xs='12' md='12'>
             <Checkbox
               id={'default'}
-              label={'As the Default'}
+              label={'Set as Default Address'}
               name={'isDefault'}
               checked={addressFormData.isDefault}
               onChange={(name, value) => {

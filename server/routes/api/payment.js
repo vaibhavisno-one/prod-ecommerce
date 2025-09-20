@@ -30,7 +30,7 @@ router.post('/create-session', auth, async (req, res) => {
                 message: 'Order amount and order ID are required'
             });
         }
-
+        const address = await Address.findById(addressId);
         const orderData = {
             order_amount: parseFloat(orderAmount),
             order_currency: "INR",
@@ -39,7 +39,7 @@ router.post('/create-session', auth, async (req, res) => {
                 customer_id: user._id.toString(),
                 customer_name: `${user.firstName} ${user.lastName}`,
                 customer_email: user.email,
-                customer_phone: user.phoneNumber || '9876543210'
+                customer_phone: user.phoneNumber || '9508279572'
             },
             order_meta: {
                 // Use dummy HTTPS URLs for development
